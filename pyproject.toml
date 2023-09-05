@@ -1,0 +1,27 @@
+[tool.black]
+line-length = 120
+extend-exclude = "(tests/fixtures|docs/generated)"
+skip-string-normalization = true
+
+[tool.ruff]
+select = ["C", "E", "F", "W", "B", "I", "D", "N", "UP", "YTT", "ANN", "S",
+"BLE", "A", "COM", "C4", "DTZ", "T10", "EM", "EXE", "ISC", "ICN", "G",
+"INP", "PIE", "T20", "PT", "Q", "RET501", "RET502", "RET503", "SIM",
+"PTH", "PD", "PGH", "PL", "TRY", "RUF", "PLE", "PLR", "PLW", "TRY", "RUF"]
+ignore = ["D202", "N806", "N803", "S101", "INP001", "Q000", "TRY002", "PLR0913", "EXE001", "EXE002"]
+fix = true
+fixable = ["C", "E", "F", "W", "B", "I", "D", "N", "UP", "YTT", "ANN", "S",
+"BLE", "A", "COM", "C4", "DTZ", "T10", "EM", "EXE", "ISC", "ICN", "G",
+"INP", "PIE", "T20", "PT", "Q", "RET501", "RET502", "RET503", "SIM",
+"PTH", "PD", "PGH", "PL", "TRY", "RUF", "PLE", "PLR", "PLW", "TRY", "RUF"]
+extend-exclude = ["docs/generated"]
+force-exclude = true
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.mypy]
+ignore_missing_imports = true
+plugins = "numpy.typing.mypy_plugin"
