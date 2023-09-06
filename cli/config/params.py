@@ -21,7 +21,8 @@ AWS_CONFIG: dict[str, dict[str, str | int]] = {
     'sagemaker': {
         'role': 'SageMakerRole',
         'instance_type': 'ml.c5.xlarge',
-        'framework_version': '1.2-1'
+        'framework_version': '1.2-1',
+        'generator': 'huggingface-llm-falcon-7b-instruct-bf16',
     },
 }
 HAYSTACK_CONFIG: dict[str, dict[str, str | int]] = {

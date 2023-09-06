@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 
 @click.group()
 def main() -> None:
-    """Set up the data and services."""
+    """Interact with the database and models."""
     return
 
 

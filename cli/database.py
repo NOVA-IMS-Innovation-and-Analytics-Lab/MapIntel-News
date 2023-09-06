@@ -27,13 +27,13 @@ def database() -> None:
 
 
 @database.command()
-def show() -> None:
-    """Show the status of the database."""
+def describe() -> None:
+    """Describe the status of the database."""
     os_client = boto3.client('opensearch')
     status_code, _ = get_db_status_code(os_client)
     msg_mapping = {
         0: 'Not created',
-        1: 'Created but is initializing',
+        1: 'Created but is processing',
         2: 'Created but empty',
         3: 'Created, populated with documents but predictions missing',
         4: 'Ready',
@@ -76,8 +76,8 @@ def write() -> None:
     os_client = boto3.client('opensearch')
     status_code, password = get_db_status_code(os_client)
     msg_mapping = {
-        0: 'Database has not been created',
-        1: 'Database is created but is initializing. Try again when initialization is finished',
+        0: 'Database has not been created.',
+        1: 'Database is created but is processing. Try again when processing is finished.',
         3: 'Database is not empty. No documents were written.',
         4: 'Database is not empty. No documents were written.',
     }
