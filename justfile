@@ -17,3 +17,7 @@ setup:
     @python cli/main.py database write
     @python cli/main.py models create
     @python cli/main.py models write
+
+delete:
+    @python cli/main.py database delete
+    @python cli/main.py models delete

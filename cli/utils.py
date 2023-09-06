@@ -17,7 +17,7 @@ def create_document_store(os_client: OpenSearchServiceClient, password: str) -> 
     return OpenSearchDocumentStore(
         host=endpoint,
         port=AWS_CONFIG['opensearch']['port'],
-        username='admin',
+        username=AWS_CONFIG['opensearch']['username'],
         password=password,
         embedding_dim=HAYSTACK_CONFIG['retriever']['dim'],
     )
