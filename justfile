@@ -1,9 +1,10 @@
 help:
     @echo "Interact with the database and models.\n"
     @echo "Commands:"
-    @echo "  isntall  Install Python dependencies."
+    @echo "  install   Install Python dependencies."
     @echo "  describe  Describe the status of the database and models."
-    @echo "  setup  Setup the database and models."
+    @echo "  setup     Setup the database and models."
+    @echo "  delete    Delete the database and models."
 
 install:
     @pip install -r requirements.txt
