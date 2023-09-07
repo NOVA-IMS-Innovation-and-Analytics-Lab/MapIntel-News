@@ -1,8 +1,9 @@
 """Configuration parameters."""
 
 from pathlib import Path
+from typing import Any
 
-AWS_CONFIG: dict[str, dict[str, str | int]] = {
+AWS_CONFIG: dict[str, Any] = {
     's3': {
         'bucket': 'mapintel-news',
         'key': 'data.json',
@@ -15,14 +16,17 @@ AWS_CONFIG: dict[str, dict[str, str | int]] = {
         'port': 443,
         'domain': 'mapintel-news-domain',
         'username': 'admin',
-        'instance_type': 'r5.large.search',
+        'instance_type': 't3.small.search',
         'instance_count': '3',
     },
     'sagemaker': {
         'role': 'SageMakerRole',
-        'instance_type': 'ml.c5.xlarge',
-        'framework_version': '1.2-1',
-        'generator': 'huggingface-llm-falcon-7b-instruct-bf16',
+        'dimensionality_reductioner': {
+            'training': {'instance_type': 'ml.m5.large'},
+            'inference': {'instance_type': 'ml.t2.medium'},
+            'framework_version': '1.2-1',
+        },
+        'generator': {'model_id': 'huggingface-llm-falcon-7b-instruct-bf16'},
     },
 }
 HAYSTACK_CONFIG: dict[str, dict[str, str | int]] = {
@@ -31,4 +35,4 @@ HAYSTACK_CONFIG: dict[str, dict[str, str | int]] = {
         'model': 'sentence-transformers/all-MiniLM-L12-v2',
     },
 }
-SAMPLE_SIZE: int = 1000
+SAMPLE_SIZE: int = 10000

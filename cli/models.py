@@ -69,7 +69,7 @@ def create() -> None:
     documents = document_store.get_all_documents()
 
     # Deploy generator model
-    JumpStartModel(model_id=AWS_CONFIG['sagemaker']['generator'], role='SageMakerRole').deploy(
+    JumpStartModel(model_id=AWS_CONFIG['sagemaker']['generator']['model_id'], role='SageMakerRole').deploy(
         tags=[{'Key': 'Model', 'Value': 'Generator'}],
     )
 
@@ -85,12 +85,12 @@ def create() -> None:
         source_dir=str(Path(__file__).parent / 'config' / 'sagemaker' / 'umap'),
         py_version='py3',
         role=AWS_CONFIG['sagemaker']['role'],
-        instance_type=AWS_CONFIG['sagemaker']['instance_type'],
-        framework_version='1.2-1',
+        instance_type=AWS_CONFIG['sagemaker']['dimensionality_reductioner']['training']['instance_type'],
+        framework_version=AWS_CONFIG['sagemaker']['dimensionality_reductioner']['framework_version'],
     )
     umap_model.fit({'train': umap_data_path})
     umap_model.deploy(
-        instance_type=AWS_CONFIG['sagemaker']['instance_type'],
+        instance_type=AWS_CONFIG['sagemaker']['dimensionality_reductioner']['inference']['instance_type'],
         initial_instance_count=1,
         tags=[{'Key': 'Model', 'Value': 'Dimensionality Reductioner'}],
     )
