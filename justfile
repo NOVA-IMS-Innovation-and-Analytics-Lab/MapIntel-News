@@ -6,9 +6,10 @@ help:
     @echo "  setup     Setup the database and models."
     @echo "  delete    Delete the database and models."
 
-style:
+dev:
     @black cli
     @ruff cli
+    @mypy cli
 
 install:
     @pip install -r requirements.txt
