@@ -36,7 +36,7 @@ def describe() -> None:
         for tag in tags:
             if tag['Key'] == 'Model':
                 tags_models.append(tag['Value'])
-    if set(tags_models) != {'Generator', 'Dimensionality Reductioner', 'Topic Model'}:
+    if set(tags_models) != {'Generator', 'Dimensionality Reductioner'}:
         click.echo('Models status: Not created.')
         return
     click.echo('Models status: Ready.')
@@ -64,6 +64,7 @@ def create() -> None:
     status_code, password = get_db_status_code(os_client)
     if status_code != missing_predictions_status_code:
         click.echo('Models can not be created. Check the status of the database.')
+        return
     document_store = create_document_store(os_client, password)
     documents = document_store.get_all_documents()
 
@@ -92,31 +93,6 @@ def create() -> None:
         instance_type=AWS_CONFIG['sagemaker']['instance_type'],
         initial_instance_count=1,
         tags=[{'Key': 'Model', 'Value': 'Dimensionality Reductioner'}],
-    )
-
-    # Train and deploy topic model
-    contents = [document.content for document in documents]
-    contents_path = Path(mkdtemp()) / 'train.csv'
-    pd.DataFrame(contents).to_csv(contents_path, index=False)
-    bert_topic_data_path = sagemaker_session.upload_data(
-        path=contents_path,
-        bucket='mapintel-news',
-        key_prefix='bert_topic_data',
-    )
-    bert_topic_model = SKLearn(
-        entry_point='entry_point.py',
-        script_mode=True,
-        source_dir=str(Path(__file__).parent / 'config' / 'sagemaker' / 'bert_topic'),
-        py_version='py3',
-        role=AWS_CONFIG['sagemaker']['role'],
-        instance_type=AWS_CONFIG['sagemaker']['instance_type'],
-        framework_version='1.2-1',
-    )
-    bert_topic_model.fit({'train': bert_topic_data_path})
-    bert_topic_model.deploy(
-        instance_type=AWS_CONFIG['sagemaker']['instance_type'],
-        initial_instance_count=1,
-        tags=[{'Key': 'Model', 'Value': 'Topic Model'}],
     )
 
 

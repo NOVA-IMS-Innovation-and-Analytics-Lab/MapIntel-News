@@ -11,7 +11,6 @@ from tempfile import NamedTemporaryFile
 from typing import cast
 
 import boto3
-import botocore
 import click
 from config.params import AWS_CONFIG, SAMPLE_SIZE
 from haystack import Document
@@ -51,22 +50,26 @@ def delete() -> None:
 @database.command()
 def create() -> None:
     """Create a database."""
-    password = click.prompt('Password', hide_input=True)
+    not_created_status_code = 0
+    os_client = boto3.client('opensearch')
+    status_code, password = get_db_status_code(os_client)
+    if status_code != not_created_status_code:
+        click.echo('Database is already created.')
+        return
     cf_client = boto3.client('cloudformation')
     parameters = [
         {'ParameterKey': 'InstanceType', 'ParameterValue': AWS_CONFIG['opensearch']['instance_type']},
         {'ParameterKey': 'InstanceCount', 'ParameterValue': AWS_CONFIG['opensearch']['instance_count']},
+        {'ParameterKey': 'OSUsername', 'ParameterValue': AWS_CONFIG['opensearch']['username']},
         {'ParameterKey': 'OSPassword', 'ParameterValue': password},
+        {'ParameterKey': 'OSDomainName', 'ParameterValue': AWS_CONFIG['opensearch']['domain']},
     ]
     with Path.open(AWS_CONFIG['cloudformation']['template_path']) as file:
-        try:
-            cf_client.create_stack(
-                StackName=AWS_CONFIG['cloudformation']['stack_name'],
-                TemplateBody=file.read(),
-                Parameters=parameters,
-            )
-        except botocore.errorfactory.ClientError as error:
-            click.echo(error)
+        cf_client.create_stack(
+            StackName=AWS_CONFIG['cloudformation']['stack_name'],
+            TemplateBody=file.read(),
+            Parameters=parameters,
+        )
 
 
 @database.command()

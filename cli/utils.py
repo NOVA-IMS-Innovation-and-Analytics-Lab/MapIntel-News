@@ -5,7 +5,6 @@
 
 import os
 
-import click
 from config.params import AWS_CONFIG, HAYSTACK_CONFIG
 from haystack.document_stores import OpenSearchDocumentStore
 from mypy_boto3_opensearch.client import OpenSearchServiceClient
@@ -55,13 +54,14 @@ def db_ready(os_client: OpenSearchServiceClient, password: str) -> bool:
 
 def get_db_status_code(os_client: OpenSearchServiceClient) -> tuple[int, str]:
     """Get the status code of the database."""
-    if not db_created(os_client):
-        return 0, ''
-    elif db_processing(os_client):
-        return 1, ''
     password = os.environ.get('OPENSEARCH_PASSWORD')
     if password is None:
-        password = click.prompt('OpenSearch password', hide_input=True)
+        error_msg = 'Environtmental variable `OPENSEARCH_PASSWORD` not found or is an empty string.'
+        raise RuntimeError(error_msg)
+    if not db_created(os_client):
+        return 0, password
+    elif db_processing(os_client):
+        return 1, password
     if db_empty(os_client, password):
         return 2, password
     elif not db_ready(os_client, password):

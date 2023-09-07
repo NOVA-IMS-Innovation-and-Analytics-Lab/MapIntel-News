@@ -6,17 +6,14 @@ Parameters:
   InstanceType:
     Description: Instance Type for OpenSearch Cluster
     Type: String
-    Default: m5.large.search
 
   InstanceCount:
     Description: Number of Instances for OpenSearch Cluster
     Type: Number
-    Default: 2
   
   OSUsername:
     Description: Username of the OS Admin
     Type: String
-    Default: admin
   
   OSPassword:
     Description: Password of the OS Admin
@@ -25,7 +22,6 @@ Parameters:
   OSDomainName:
     Description: Domain name for OpenSearch
     Type: String
-    Default: mapintel-news-domain
     
 Outputs:
   OpenSearchEndpoint:
